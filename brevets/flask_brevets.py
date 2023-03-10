@@ -99,34 +99,22 @@ def _calc_times():
 
 @app.route("/insert", methods = ["POST"])
 def insert():
-    try:
-        input_json = request.json
-        brevet_dist = input_json["brevet_dist"]
-        start_time = input_json["start_time"]
-        controls = input_json["controls"]
+    input_json = request.json
+    brevet_dist = input_json["brevet_dist"]
+    start_time = input_json["start_time"]
+    controls = input_json["controls"]
         
-        brevet_id = insert_brevet(brevet_dist, start_time, controls)
-        return flask.jsonify(result = {}, message = "Inserted!", status = 1, mongo_id = brevet_id) 
-    except:
-        return flask.jsonify(result={},
-                        message="Oh no! Server error!", 
-                        status=0, 
-                        mongo_id='None')
+    brevet_id = insert_brevet(brevet_dist, start_time, controls)
+    return flask.jsonify(result = {}, message = "Inserted!", status = 1, mongo_id = brevet_id) 
 
 
 @app.route("/fetch")
 def fetch():
-    try:
-        brevet_dist, start_time, controls = get_brevet()
-        return flask.jsonify(
-                result={"brevet_dist": brevet_dist, "start_time": start_time, "controls": controls}, 
-                status=1,
-                message="Successfully fetched one brevet row!")
-    except:
-        return flask.jsonify(
-                result={}, 
-                status=0,
-                message="Something went wrong, couldn't fetch any lists!")
+    brevet_dist, start_time, controls = get_brevet()
+    return flask.jsonify(
+            result={"brevet_dist": brevet_dist, "start_time": start_time, "controls": controls}, 
+            status=1,
+            message="Successfully fetched one brevet row!")
 
 ##################################################
 ################# Start Flask App ################ 

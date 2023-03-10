@@ -1,7 +1,7 @@
 from mongoengine import *
 
 
-class Checkpoint(EmbeddedDocument):
+class Controls(EmbeddedDocument):
     """
     A MongoEngine EmbeddedDocument containing:
        distance: MongoEngine float field, required, (checkpoint distance in kilometers),
@@ -15,8 +15,8 @@ class Checkpoint(EmbeddedDocument):
     # close_time = acp_times.close_time(km, distance, start_time).format('YYYY-MM-DDTHH:mm')
 
     km = FloatField(required=True)
-    open_time = DateTimeField(required=True)
-    close_time = DateTimeField(required=True)
+    open_time_field = StringField(required=True)
+    close_time_field = StringField(required=True)
 
 
 class Brevet(Document):
@@ -27,5 +27,5 @@ class Brevet(Document):
 		checkpoints: MongoEngine list field of Checkpoints, required
     """
     brevet_dist = FloatField(required=True)
-    start_time = DateTimeField(required=True)
-    controls = EmbeddedDocumentListField(Checkpoint, required=True)
+    start_time = StringField(required=True)
+    controls = EmbeddedDocumentListField(Controls, required=True)
