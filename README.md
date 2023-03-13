@@ -25,34 +25,28 @@ For this project, you will re-organize `Brevets` into two separate services:
 	* A RESTful service to expose/store structured data in MongoDB.
 
 ## Tasks
+* Application Outline
+  * This app will generate a website that calculate the opening time and closing time for ACP brevets based on the checkpoint(you typed as input) kilometers and the time you choose. In this project 6, instead of communicating with database directly, we will use Restful API to wrap the frontend and backend part respectively. When you press the submit botton, we will send your data to the flask and then pass it to our brevet api. With the form of JSON the data will be evaluated using the models.py formatting and being stored into mongoengine database; when you press the display button, in reverse, we will fetch the data from our brevet api, get the data back from the mongoengine database, and package it and send it to the frontend, then display the data thay you typed before.
 
-* Implement a RESTful API in `api/`:
-	* Write a data schema using MongoEngine for Checkpoints and Brevets:
-		* `Checkpoint`:
-			* `distance`: float, required, (checkpoint distance in kilometers), 
-			* `location`: string, optional, (checkpoint location name), 
-			* `open_time`: datetime, required, (checkpoint opening time), 
-			* `close_time`: datetime, required, (checkpoint closing time).
-		* `Brevet`:
-			* `length`: float, required, (brevet distance in kilometers),
-			* `start_time`: datetime, required, (brevet start time),
-			* `checkpoints`: list of `Checkpoint`s, required, (checkpoints).
-	* Using the schema, build a RESTful API with the resource `/brevets/`:
-		* GET `http://API:PORT/api/brevets` should display all brevets stored in the database.
-		* GET `http://API:PORT/api/brevet/ID` should display brevet with id `ID`.
-		* POST `http://API:PORT/api/brevets` should insert brevet object in request into the database.
-		* DELETE `http://API:PORT/api/brevet/ID` should delete brevet with id `ID`.
-		* PUT `http://API:PORT/api/brevet/ID` should update brevet with id `ID` with object in request.
+* Algorithm(The way we calcute the open and the close time)
+	* Basically, we will use Maximum and Minimum Speed to Calculate Open Time and Close Time respectively.
+	* In different kilometer scales, we have different standard of speeds. (For example, in 0-200, the Max Speed is 34 km/hr; in 200-400, the Max Speed is 32 km/hr; in 400-600, the Max Speed is 30 km/hr...)
+	* There are some special cases:
+	   * The closing time for 0 km is always 1 hour, and if the km is before 60km, we will use a different rule to take care of late stater.
+	   * We might have some adjustments on closing time on special kms. (For example, if your end point is 200km, the closing time is not 13h 20 min, is 13h 30min) 
 
-* Copy over `brevets/` from your completed project 5.
-	* Replace every database related code in `brevets/` with calls to the new API.
-		* Remember: AutoGrader will ensure there is NO CONNECTION between `brevets` and `db` services. `brevets` should only operate through `api` and still function the way it did in project 5.
-		* Hint: Submit should send a POST request to the API to insert, Display should send a GET request, and display the last entry.
-	* Remove `config.py` and adjust `flask_brevets.py` to use the `PORT` and `DEBUG` values specified in env variables (see `docker-compose.yml`).
+*  How To Use Start(Docker instructions, Web app instructions)
+	* For Docker Compose Instruction:
+	  * step1: build and run our docker compose file by "docker compose up" 
+	  * step2: open the browser and go into the localhost then interact with the browser
+	
+	* Web app instruction
+	  * First, you need to choose the end km or the length of the race based on the options
+	  * Second, you need to choose the date you want to query
+	  * Third, you can type the checkpoint km one by one and press return, you will get the exact time for the open time and close time.
+	  * Fourth, you can press the submit button to submit all the data to the api, and api will pack data to the mongoengine database. After submission, when you press display buttion, you will get all the data back in frontend through api.
 
-* Update README.md with API documentation added.
 
-As always you'll turn in your `credentials.ini` through Canvas.
 
 ## Grading Rubric
 
